@@ -1,0 +1,9 @@
+name: ${project.name}
+main: ${project.groupId}.${project.artifactId}.Main
+version: ${project.version}
+author: LeonTG
+description: You can only use the slots in your hotbar, all others slots are blocked.
+
+commands:
+  nineslots:
+    description: Manage the scenario.
