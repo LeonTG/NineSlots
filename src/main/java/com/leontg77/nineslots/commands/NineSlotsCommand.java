@@ -1,6 +1,6 @@
 /*
- * Project: TeamInventory
- * Class: com.leontg77.teaminv.commands.TeamInvCommand
+ * Project: NineSlots
+ * Class: com.leontg77.nineslots.commands.TeamInvCommand
  *
  * The MIT License (MIT)
  *
@@ -36,14 +36,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.StringUtil;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * TeamInv command class.
+ * NineSlots command class.
  *
  * @author LeonTG
  */
@@ -63,6 +64,11 @@ public class NineSlotsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage(Main.PREFIX + "Usage: /nineslots <info|enable|disable>");
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("info")) {
             sender.sendMessage(Main.PREFIX + "Plugin creator: §aLeonTG");
             sender.sendMessage(Main.PREFIX + "Version: §a" + plugin.getDescription().getVersion());
@@ -78,14 +84,27 @@ public class NineSlotsCommand implements CommandExecutor, TabCompleter {
             }
 
             if (enabled) {
-                sender.sendMessage(Main.PREFIX + "Nine Inventory is already enabled.");
+                sender.sendMessage(Main.PREFIX + "Nine Slots is already enabled.");
                 return true;
             }
 
-            plugin.broadcast(Main.PREFIX + "Nine Inventory has been enabled.");
+            plugin.broadcast(Main.PREFIX + "Nine Slots has been enabled.");
             enabled = true;
 
             Bukkit.getPluginManager().registerEvents(listener, plugin);
+
+            task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Player online : Bukkit.getOnlinePlayers()) {
+                        for (int i = 9; i < 36; i++) {
+                            online.getInventory().setItem(i, Main.BLOCKED_ITEM);
+                        }
+                    }
+                }
+            };
+
+            task.runTaskTimer(plugin, 0L, 100L);
             return true;
         }
 
@@ -119,11 +138,10 @@ public class NineSlotsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        List<String> toReturn = Lists.newArrayList();
         List<String> list = Lists.newArrayList();
 
         if (args.length != 1) {
-            return toReturn;
+            return Lists.newArrayList();
         }
 
         list.add("info");
@@ -133,13 +151,6 @@ public class NineSlotsCommand implements CommandExecutor, TabCompleter {
             list.add("disable");
         }
 
-        // make sure to only tab complete what starts with what they
-        // typed or everything if they didn't type anything
-        toReturn.addAll(list
-                .stream()
-                .filter(str -> args[args.length - 1].isEmpty() || str.startsWith(args[args.length - 1].toLowerCase()))
-                .collect(Collectors.toList()));
-
-        return toReturn;
+        return StringUtil.copyPartialMatches(args[args.length - 1], list, Lists.newArrayList());
     }
 }

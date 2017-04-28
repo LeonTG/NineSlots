@@ -1,6 +1,6 @@
 /*
- * Project: TeamInventory
- * Class: com.leontg77.teaminv.listeners.DeathListener
+ * Project: NineSlots
+ * Class: com.leontg77.nineslots.listeners.ClickListener
  *
  * The MIT License (MIT)
  *
@@ -27,60 +27,70 @@
 
 package com.leontg77.nineslots.listeners;
 
-import com.leontg77.nineslots.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 /**
- * Death listener class.
+ * Click listener class.
  *
  * @author LeonTG
  */
 public class ClickListener implements Listener {
-    private final Scoreboard board;
-    private final Main plugin;
 
-    public ClickListener(Main plugin) {
-        this.plugin = plugin;
-        this.board = Bukkit.getScoreboardManager().getMainScoreboard();
-    }
+    @EventHandler
+    public void on(InventoryClickEvent event) {
+        ItemStack item = event.getCurrentItem();
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void on(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        Team team = board.getPlayerTeam(player);
-
-        if (team == null) {
+        if (item == null) {
             return;
         }
 
-        if (team.getSize() == 1 && plugin.getTeamInvs().containsKey(team)) {
-            Inventory inv = plugin.getTeamInvs().get(team);
-
-            for (ItemStack item : inv.getContents()) {
-                if (item == null) {
-                    continue;
-                }
-
-                if (item.getType() == Material.AIR) {
-                    return;
-                }
-
-                event.getDrops().add(item);
-            }
-
-            plugin.getTeamInvs().remove(team);
+        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+            return;
         }
 
-        team.removePlayer(player);
+        String name = item.getItemMeta().getDisplayName();
+
+        if (name.equals("§4§lBlocked Slot")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerDropItemEvent event) {
+        ItemStack item = event.getItemDrop().getItemStack();
+
+        if (item == null) {
+            return;
+        }
+
+        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+            return;
+        }
+
+        String name = item.getItemMeta().getDisplayName();
+
+        if (name.equals("§4§lBlocked Slot")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerDeathEvent event) {
+        event.getDrops().removeIf(item -> {
+            if (item == null) {
+                return false;
+            }
+
+            if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+                return false;
+            }
+
+            return item.getItemMeta().getDisplayName().equals("§4§lBlocked Slot");
+        });
     }
 }

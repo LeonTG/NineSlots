@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.leontg77</groupId>
-    <artifactId>teaminv</artifactId>
+    <artifactId>nineslots</artifactId>
     <version>1.0</version>
-    <name>TeamInventory</name>
+    <name>NineSlots</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,12 +26,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.10</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -103,7 +97,4 @@
             </plugin>
         </plugins>
     </build>
-
-
-
 </project>

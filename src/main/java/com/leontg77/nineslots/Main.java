@@ -1,6 +1,6 @@
 /*
- * Project: TeamInventory
- * Class: com.leontg77.teaminv.Main
+ * Project: NineSlots
+ * Class: com.leontg77.nineslots.Main
  *
  * The MIT License (MIT)
  *
@@ -27,10 +27,14 @@
 
 package com.leontg77.nineslots;
 
+import com.google.common.collect.Lists;
 import com.leontg77.nineslots.commands.NineSlotsCommand;
 import com.leontg77.nineslots.listeners.ClickListener;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -39,13 +43,19 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author LeonTG
  */
 public class Main extends JavaPlugin {
+    public static final ItemStack BLOCKED_ITEM = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
     public static final String PREFIX = "§9Nine Slots §8» §7";
+
+    static {
+        ItemMeta meta = BLOCKED_ITEM.getItemMeta();
+        meta.setDisplayName("§4§lBlocked Slot");
+        meta.setLore(Lists.newArrayList("§7§oYou can only use your hotbar in Nine Slots!"));
+        BLOCKED_ITEM.setItemMeta(meta);
+    }
 
     @Override
     public void onEnable() {
-        ClickListener listener = new ClickListener(this);
-        NineSlotsCommand cmd = new NineSlotsCommand(this, listener);
-
+        NineSlotsCommand cmd = new NineSlotsCommand(this, new ClickListener());
         getCommand("nineslots").setExecutor(cmd);
     }
 
