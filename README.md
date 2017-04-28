@@ -1,31 +1,27 @@
-# TeamInventory
+# Nine Slots
 
 **Description:**
 
-Throughout the game, you and your teammates can access an inventory that is shared among your team using /ti. There is no physical inventory, so any teammate can access it from anywhere. The items in the inventory is dropped when the last player on that team dies.
+You can only use the slots in your hotbar, all others slots are blocked.
 
 ___
 
 **Commands:**
 
-`/teaminv` - *Open the team inventory. (If scenario is enabled)*
+`/nineslots info` - *View plugin information.*
 
-`/teaminv info` - *View plugin information.*
+`/nineslots enable` - *Enable the scenario.*
 
-`/teaminv enable` - *Enable the scenario.*
-
-`/teaminv disable` - *Disable the scenario.*
-
-`/ti` - *Alias of `/teaminv`.*
+`/nineslots disable` - *Disable the scenario.*
 
 **Permissions:**
 
-`teaminv.manage` - *Permission to use* `/teaminv enable` and `/teaminv disable`
+`nineslots.manage` - *Permission to use* `/nineslots enable` and `/nineslots disable`
 
 ___
 
-[**Download**](https://github.com/LeonTG77/TeamInventory/releases)
+[**Download**](https://github.com/LeonTG/NineSlots/releases)
 
-[**Source Code**](https://github.com/LeonTG77/TeamInventory)
+[**Source Code**](https://github.com/LeonTG/NineSlots)
 
 *This has been tested on the latest spigot 1.8.7 build.*
